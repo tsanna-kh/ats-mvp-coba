@@ -852,10 +852,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Gabungkan: data sheets + data lokal (hindari duplikat by email)
-      const localEmails = candidates.map(c => c.email.toLowerCase());
-      const newFromSheets = data.candidates.filter(
-        c => !localEmails.includes(c.email.toLowerCase())
-      );
+      const localEmails = candidates
+  .map(c => (c.email || '').toString().toLowerCase());
+
+const newFromSheets = data.candidates.filter(
+  c => c.name && !localEmails.includes((c.email || '').toString().toLowerCase())
+);
 
       candidates = [...newFromSheets, ...candidates];
       save();
