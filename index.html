@@ -837,5 +837,71 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+<table id="tabel-kandidat">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nama</th>
+      <th>Posisi</th>
+      <th>PIC</th>
+      <th>Source</th>
+      <th>Stage</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxWhhdK7XHeAVYcCc7rAdaUGwHr_Kv1-RL85qzfIBMu3PLAgqkaFxLsJKqvKAOwkxviyw/exec';
+
+  const STAGE_COLOR = {
+    'Applied':           '#e0e0e0',
+    'CV Screen':         '#fff3cd',
+    'Email Sent':        '#d0f0fd',
+    'Technical Test':    '#cce5ff',
+    'Recap to Manager':  '#d4edda',
+    'User Decision':     '#ffe8cc',
+    'Interview 1':       '#e2d9f3',
+    'Interview 2':       '#f8d7da',
+    'Offering':          '#d1ecf1',
+  };
+
+  async function loadCandidates() {
+    try {
+      const res = await fetch(API_URL, { redirect: 'follow' });
+      const data = await res.json();
+      renderTable(data.candidates);
+    } catch (err) {
+      console.error('Gagal fetch:', err);
+    }
+  }
+
+  function renderTable(candidates) {
+    const tbody = document.querySelector('#tabel-kandidat tbody');
+    tbody.innerHTML = '';
+
+    candidates.forEach(c => {
+      const stageBg = STAGE_COLOR[c.stage] || '#f0f0f0';
+      const statusColor = c.status === 'hired' ? 'green'
+                        : c.status === 'reject' ? 'red'
+                        : c.status === 'withdraw' ? 'gray' : '';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${c.nomor || '-'}</td>
+        <td>${c.nama}</td>
+        <td>${c.posisi}</td>
+        <td>${c.pic}</td>
+        <td>${c.source}</td>
+        <td style="background:${stageBg}; padding:4px 8px; border-radius:4px">${c.stage}</td>
+        <td style="color:${statusColor}; font-weight:bold">${c.status || '-'}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  loadCandidates();
+</script>
 </body>
 </html>
