@@ -845,8 +845,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(SHEETS_API_URL, { redirect: 'follow' });
       const text = await res.text();
       const data = JSON.parse(text);
+      
+console.log('Kandidat pertama:', JSON.stringify(data.candidates[0]));
 
-      if (!data.candidates || !Array.isArray(data.candidates)) {
+if (!data.candidates || !Array.isArray(data.candidates)) {
         console.error('Format data tidak sesuai:', data);
         return;
       }
